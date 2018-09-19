@@ -1,0 +1,196 @@
+MIPS addressing modes
+  1. Register
+    - (operand is in a register)
+    - add $t0,$t1,$t2
+  2. Immediate
+    - (operand is a literal/constant in the instruction)
+    - addi $t0,$t1,-1
+  3. Base
+    - (base + index)(Displacement)(operand is in memory at address sum of register and constant)
+    - lw $t0,0($t1)
+    - sw $t0,16($t2)
+    - $t1/$t2 "Base value"
+    - 0/16 index (usually zero)
+    - 0($t1) Base($t1) + Index(0)
+  4. PC-Relative
+    - Program counter
+      - (address sum of PC and a constant)
+      - beq $a0,$t1,done
+        - (conditional) branch
+        - beq branch if equal
+        - done is label
+      - counter
+      - not general purpose Register
+      - specific purpose
+      - address of next instruction to execute
+      - can not modify counter directly
+  5. Pseudo-direct
+      - jump address: PC with 26 bits from instruction
+      - j foobar
+      - j = jump
+
+Arithmatic/Logic
+  1. add  $t0,$t0,$t0
+  2. addi $t0,$t0,$t0
+  3. sub  $t1,$t2,$t3 t1=t2-t3
+  4. and
+  5. andi
+  6. or
+  7. ori
+  8. xor
+  9. not
+  10. nor
+  11. sll  Shift left logical
+  12. srl  Shift right logical
+
+Memory more
+  1. lw $t0,0($t0)
+  2. sw $t1,0($t0)
+
+Control
+  1. beq  branch on equal
+  2. bne  branch on not equal
+  3. slt  set-less-then
+  4. slti set-less-then-imediate
+  5. bgt  branch greater than
+  6. blt  branch less than
+  7. bge  branch greater than or equal
+  8. ble  branch less than or equal
+
+Function support
+  1. jal label
+    - jump and link
+    - remeber where you are jumping from
+  2. jr $ra
+    - jump register
+    - jump back to where you were
+
+Logical and/or
+
+  and(&&)
+  A|B|X
+  _|_|_
+  000
+  010
+  100
+  111
+
+  or(||)
+  A|B|X
+  _|_|_
+  000
+  011
+  101
+  111
+
+Bitwise and/or
+
+  and(&)
+  or(|)
+
+  and $t0,$t1,$t2
+
+  t1      |  |  |  |...|1|1|0|0|
+  t2      |  |  |  |...|1|0|1|0|
+  t0      |  |  |  |...|1|0|0|0|
+  bit pos  31 30 29     3 2 1 0
+
+
+  and with 1 tell you if its odd or even
+  or with 32 converts char to lowercase
+
+shift left/right Logical
+  take series of bits in register
+  shift all bits left or right
+  insert zeros on end or beginning
+
+Register File
+  not actual File
+  area in cpu (cache?)
+
+  lw $t0,0($t1)
+          ^addres of where to look in memory for a value
+  lw $t2,4($t1)
+    for bytes higher in memory
+  lw $t3,-4($t1)
+    for bytes lower in memory
+
+  t0| value at 0x4C |
+  ------------------
+  t1|   0x4C        |
+  ------------------
+  t2| value at 0x50 |
+  ------------------
+  t3| value at 0x48 |
+  ------------------
+
+  0xXX = memory address
+  t3 hold 17
+  sw $t3,-8($t1)
+  store 17 in 0x4C
+
+convert C to MIPS
+
+  C
+    while (A[i] == c){
+      i++;
+      }
+
+    i $t0
+    A $s0
+    c $s1
+
+    allowed to use
+    $t1-4
+
+  MIPS
+    loop:
+          sll  $t1, $t0, 2      #t1=i*4
+          addi $t0, $t0, 1      #i++
+          add  $t1, $s0, $t1    #t1=&A[i]
+          lw   $t1, 0($t1)      #t1=A[i]
+          bne  $t1, $s1, done   #A[i]==c?
+          j loop                #A[i]==c
+    done:
+
+  MIPS but better
+    - use more registers to get fewer instructions
+
+          add  $t2, $zero, $s0  #t2=&A[0]
+    loop: lw   $t1, 0($t2)      #t1=A[i]
+          bne  $t1, $s1, done   #A[i]==c?
+          addi $t0, $t0, 1      #i++
+          addi $t2, $t2, 4      #t2=&A[i]
+          j loop
+
+      - we know it will always happen at least once
+      - so make it a do while instead of while
+      - best one so far but requires it ro run at least once
+          add  $t2, $zero, $s0  #t2=&A[0]
+    loop: add  $t0, $t0, 1      #i++
+          addi $t2, $t2, 4      #t2=&A[i]
+          lw   $t1, 0($t2)      #t1=A[i]
+          beq  $t1, $s1, loop   #t1==s1 then loop
+
+  C
+    for(int i=0;i<10;i++){
+      A[i]=B[i]
+    }
+
+    $a0 $A[0]
+    $a1 $B[0]
+
+    allowed to use $t0-3
+
+  MIPS
+      add  $t0, $zero, $a0   #t0=&A[0]
+      add  $t1, $zero, $a1   #t1=&B[0]
+      addi $t2, t0, 40       #t2=&A[10]
+loop: lw   $t3, 0($t1)       #t3=B[i]
+      sw   $t3, 0($t0)       #A[i]=B[i]
+      addi $t0, $t0, 4       #A[i++]
+      addi $t1, $t1, 4       #A[i++]
+      bne  $t0, $t2, loop    #for(i=0;i<10;i++)
+
+there's no load word or store word that uses 3 registers
+the 0 is almost always a zero because in practice we are iterating and not grabbing a constant

@@ -1,0 +1,179 @@
+do assignment 2 and survey
+-------------------------------------------------------------------------------
+performance(P) = 1/execution time(et)
+Px > Py
+1/etx > 1/ety
+
+clock cycle = 1/clock rate
+
+execution time = clock cycle per program * clock cycle time
+clock cycle per program = # instructions in program * average clock cycles per instruction
+
+CPI
+cycle per instruction
+specific instruction - integer
+category of instruction - integer?
+  eg. arithmetic
+      branch
+      jump
+      memory move
+average of all instruction -- float 3.2
+
+CPU execution time = instruction count * CPI * clock cycle time
+instructions/program * clock cycles/instruction * seconds/clock cycle
+
+Amdahl's Law
+"Make the common case fast"
+optimize your common operations first to optimize your program
+-------------------------------------------------------------------------------
+Mips architecture
+R4400(?)
+
+32 bit arch.
+32 general purpose integer registers(each 32 bits)
+also: * floating piont registers
+      * specific purpse registers
+
+registers are your fastest "memory" for most important values
+mips will only operate on registers except memory move
+memory move moves values between registers and memory
+-------------------------------------------------------------------------------
+32 bit instructions
+intel: variable length instructions
+MIPS compromise: multiple instructions formats
+
+1 bit
+4 bits = nyble
+8 bits = byte
+16 bits = half word
+32 bits = word
+-------------------------------------------------------------------------------
+Instruction formats
+R - Register (used for isntructions that have 3 registers such as add $t1,$t2,$t3)
+I - Immediate ( used for an instruction that contains a numeric literal(immediate value))
+J - jump (used to jump to a new area of the code)
+-------------------------------------------------------------------------------
+R Format
+OP = operation code (6 bits)
+RS = register source 1(5 bits)
+RT = register source 2 (5 bits)
+RD = register destination (5 bits)
+SHAMT = shift amount (5 bits)
+FUNC = function code (6 bits)
+Start|OP|RS|RT|RD|SHAMT|FUNC|END
+
+add $t0,$t1,$s2,
+op:0 RS:17 RT:18 RD:8 SH:0 Fun:32
+000000 10001 10010 01000 00000 100000 (direct format)
+0000 0010 0011 0010 0100 0000 0010 0000 (proper format)
+-------------------------------------------------------------------------------
+I Format
+IMM = numeric literal (16 bits)
+|OP|RS|RT|IMM|
+
+lw: load word: memory to register
+lw $t0,32($s3)
+
+examples:
+lw $t0,32($s3)            a[4]
+---------------------------------
+addi $t0, $s3, 32
+lw $t0,0($t0)             a[i]
+-------------------------------------------------------------------------------
+J format
+Address = memory address(26 bits)
+
+|OP|Address|
+
+-------------------------------------------------------------------------------
+Specific registers
+zero register:$0 zero (always zero)
+-------------------------------------------------------------------------------
+Addressing modes
+1. register
+2. immediate
+3. base + Index
+4. z
+5. z
+-------------------------------------------------------------------------------
+
+Memory examples
+bytes           words
+    --------------
+    7| 4 bits |
+    ------------
+    6| 4 bits |
+    ------------ 1
+    5| 4 bits |
+    ------------
+    4| 4 bits |
+    --------------
+    3| 4 bits |
+    ------------
+    2| 4 bits |
+    ------------ 0
+    1| 4 bits |
+    ------------
+    0| 4 bits |
+    --------------
+must pick chunks together
+-------------------------------------------------------------------------------
+Software Conventions for the registers
+0     $zero           zero constant
+1     $at             reserved for assembler
+2-3   $v0,$v1         eval expression returns results of function
+4-7   $a0,..,$a1      arguments
+8-15  $to,..,$t7      temporaries (caller saved)
+16-23 $S0,..,$s7      temporaries (callee saved)
+24-25 $t8,%t9         more temporaries
+26-27 $k0,$k1         reserved for OS
+28    $GP             global pointer
+29    $SP             stack pointer   (functions for us)
+30    $FP             frame pointer   (unused by use)
+31    $RA             return address  (functions for us)
+
+
+
+
+
+
+--------------
+15| 4 bits |
+------------
+14| 4 bits |
+------------ 3
+13| 4 bits |
+------------
+12| 4 bits |
+--------------
+11| 4 bits |
+------------
+10| 4 bits |
+------------ 2
+9| 4 bits |
+------------
+8| 4 bits |
+--------------
+7| 4 bits |
+------------
+6| 4 bits |
+------------ 1
+5| 4 bits |
+------------
+4| 4 bits |
+--------------
+3| 4 bits |
+------------
+2| 4 bits |
+------------ 0
+1| 4 bits |
+------------
+0| 4 bits |
+--------------
+
+load byte 2
+lb $t0, 2($s0)
+
+load word 1
+addi $t0,$s0,4
+lw $t0, 0($t0)

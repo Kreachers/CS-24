@@ -1,0 +1,7 @@
+﻿Spim simulator
+OR
+Qtspim (recommened)
+OR
+MARS
+
+www.cabrillo.edu/~shodges/sc24/cs24-info.html
