@@ -1,0 +1,92 @@
+jal label: jump and link
+  - jumps to label and link current position to $ra
+  - return by jr $ra: jump register
+    - overwrites PC w/ specified register ($ra)
+    - $ra: return address register
+  - writes PC+4 into $ra
+  - overwrites PC w/ address of label
+
+J label: just jumps to label without linking
+  - avoid in most cases
+
+Arguments to a function
+  - if you are providing variables for a function only use the $a registers
+  - $a0-$a3
+  - then memory if you need more(only if necessary)
+
+returning variable
+  - if you need to return a variable the use $v registers
+  - $v0 and $v1
+  - then copy them out of $v register into $t
+  - if you need to return more then 2 the use memory
+
+dont jump/branch inside of a jump/branch
+  - if you must save $ra into memory before jumping/branching
+  - when done with function return and return $ra to memory
+
+Memory not to size
+__________________________
+|Stack                    | < used by functions
+|_________________________|     -"locals"
+|Heap \/far apart/\       |     -spilling register
+|_________________________|     -extra params or return values
+|data segment(dynamic)    |
+|_________________________|
+|Text segment(static)     |
+|_________________________|
+|Reserved                 |
+|_________________________|
+
+  - heap goes up
+  - $sp: stack pointer
+    - points to where in the stack you are
+    - needs to be preserved by saving to Memory
+  - %gp is global pointer.
+    - says where the heap is
+  - $fp: frame pointers
+    - points to the bottom of the Stack
+    - for this calss unused
+
+you dont have any registers. you can borrow them. when your done you need to put them back
+
+
+function call frame/procedure activation record
+  _______________________________ < $fp frame pointer
+  | save fragments               |
+  | saved $ra                    |
+  | spilled registers            |
+  | local variables. arrays etc  |
+  |______________________________| < $sp stack pointer
+
+example of spillign registers
+
+  foo: Lets save RA
+      addi $sp, $sp, -4   #allocate space on the stack
+      sw   $ra, 0($sp)    #preserver $ra on the stack
+      :
+      :
+      :
+      lw   $ra, 0($sp)    #restore $ra
+      addi $sp, $sp, 4    #pop stack
+
+Register
+  - $s registers: callee-saved
+  - $t registers: caller saved
+
+___________             ___________
+|         |  >>>>>>>>>  |         |
+|    A    |  A calls B  |    B    |
+|_________|             |_________|
+
+A: caller function
+B: callee function
+
+$s preserved across function calls
+$t no guarantee that this value will be intact upon returning
+
+inside of B
+  - want to use s register, must preserve and restore it
+  - want to use t register, just do it
+  - if jumping into new function C
+    - if B must preserved any needed registers in memory before jumping into C
+    - C can use any t registers as it wants
