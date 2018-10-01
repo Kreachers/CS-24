@@ -1,0 +1,76 @@
+  I/O Logic
+
+remember how logic gates work
+and their truth tables
+
+
+Not   _
+  x = a
+
+Nand  ___
+  x = a*b
+
+Nor   ___
+  x = a+b
+
+And (logical product)
+  x = a*b
+
+or (logical sum)
+  x = a+b
+
+bool
+  n inputs
+  2^n possible results
+  enumerate them
+  truth table
+
+Inverse
+      _
+  a + a = 1
+      _
+  a * a = 0
+
+0,1
+
+a + 1 = 1
+a * 0 = 0
+
+Associative
+  a + (b + c) = (a + b) + c
+  a * (b * c) = (a * b) + c
+
+Cumulative
+  a + b = b + a
+  a * b = b * a
+
+Distributive
+  a * (b + c) = (a * b) + (a * c)
+  a + (b * c) = (a + b) * (a + c)
+
+absrbtion
+  a*(a+b) = a
+  a + ab = a
+
+DeMorgans law
+  __   _   _
+  ab = a + b
+  _____ = _   _
+  a + b = a * b
+
+Mojority function
+             _      _      _   ___
+  f(a,b,c) = abc + abc + abc + abc
+    product of sums (SOP)
+  if most of your variables are 1 then the answer is 1
+  if most of your variables are 0 then the answer is 0
+
+MULTIPLEXORS
+
+
+
+Question:
+  What is this?
+  f(a,b,c) = ab+ac
+
+  a and b or a and c
