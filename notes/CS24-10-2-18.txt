@@ -1,0 +1,45 @@
+Binary addition
+twos complements
+bias notation
+binary coded decimal(BCD)
+more binary stuff
+
+binary division
+  - skipping
+  - more complicated then multiplication
+
+binary multiplication
+  - 3rd verion from the book
+  - multiply to n bit numbers
+    - 2n bit result
+    - multiply 32 bit number needs 64 bits
+    - $hi register for highest 32 bits
+    - $lo register for lowest 32 bits
+  Normal multiplication
+      multiplicand
+    x multiplier
+      product
+  binary multiplication
+    |multiplicand|
+    |  product   | multiplier |
+  multiplicand in one register
+  product/multiplier in another register
+  product side starts as all zeros
+  as you multiply the product side of the product/multiplier register will expand into the multiplier side
+    |multiplicand|
+    |         product         |
+  Steps
+    Repeat n times
+    - examine least sig bit of product/multiplier register
+      - if 1 add multiplicand to top half of product/multiplier register
+    - shift product/multiplier right by 1
+
+        0011    3
+      x 0010    2
+       ------
+        0000
+       0011
+      0000
+    +0000
+     -------
+     0000110    6
