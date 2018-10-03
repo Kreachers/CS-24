@@ -29,7 +29,7 @@ binary multiplication
     |multiplicand|
     |         product         |
   Steps
-    Repeat n times
+    Repeat n times where n is the number of bits in the multiplier/multiplicand
     - examine least sig bit of product/multiplier register
       - if 1 add multiplicand to top half of product/multiplier register
     - shift product/multiplier right by 1
@@ -43,3 +43,54 @@ binary multiplication
     +0000
      -------
      0000110    6
+
+Circuits(combinatorial)
+  Decoder
+    n inputs, 2^n outputs
+                      |------------| x0
+                      |            | x1
+    3-8 encoder   a-/-|            | x2
+                  3bit|            | ..
+                      |------------| x7
+
+                      |------------| x0
+                      |            | x1
+    2-4 encoder   a-/-|            | x2
+                  2bit|            | x3
+                      |------------|
+
+
+addition
+a bit adder
+  (3,2) adder
+  3 input, 2 outputs
+
+ALU - arithemtic logic unit
+                    Ci(carry in)
+                        |
+                  |------------|
+              a --|            |
+                  |            |-- sum
+              b --|            |
+                  |------------|
+                        |
+                    Co(carry out)
+
+  ripple carry adder
+    - dont use, too slow
+
+a  b  c | sum  co
+-----------------
+0  0  0    0   0
+0  0  1    1   0
+0  1  0    1   0
+0  1  1    0   1
+1  0  0    1   0
+1  0  1    0   1
+1  1  0    0   1
+1  1  1    1   1
+
+
+S-R latches
+  set and reset latches
+  uses nor gates
