@@ -1,0 +1,65 @@
+Clock signal
+              _____________       _____________
+              |           |       |           |
+Rising edge>  |           |       |           |     < Falling edge
+______________|           |_______|           |_______
+
+
+
+convert SR latch to clock D-latch
+clocked Dlatch
+  - now there is only one input which prevents some illegal statements
+  - the second input is now the clock signal
+
+two D latches in series is a Flip Flop
+  - flip flop is one bit of memory
+
+
+FLOATING POINT IEEE 754
+FUCKING KILL ME NOW
+
+four rounding modes
+
+
+single precision:   float    32 bit    8  bit exponent   23 bits significand  1 sign bit
+double precision:   double   64 bit    11 bit exponent   52 bits significand  1 sign bit
+
+sign  exp           significand
+------------------------------------
+|1|   8    |           23          |
+------------------------------------
+(-1)^sign * "1+significand" *2^(exponent-127)
+
+significand finding procedure
+  - *2, integer portion 0,1 -next digit of significand
+  - fractional portion -> input for next round
+  - repeat until hit 0 or run out of digits
+
+  .75  *2  =  1.5
+  .5   *2  =  1.0
+  0   done
+  11
+
+  1.1*2^1
+  GOOGLE IT
+
+karnaugh maps
+  - truth table or equation (SOP)
+    - build table (karnough maps)
+    - simplifing process (grouping of terms)
+    - read off teh results
+
+MIDTERM NEXT WEEK
+
+no
+  - karnough maps or IEEE
+yes
+  - adder decoder truthtable
+  - between truth table equation and circuit conversion
+  - circuits
+  - at least one mips coding fragment
+  - at least one given code to analyze
+  - different registers, callee vs caller, s vs t registers, etc.
+  - 2's complement
+  - binary adding/subtraction/multiplication
+  - basically anything from week 1 to 6
