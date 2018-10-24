@@ -1,0 +1,66 @@
+Datapath
+  Mostly ignore control
+
+  executing a MIPS instruction
+    5 steps(every instruction doesnt need all 5 steps)
+      1. fetch(instruction fetch)    IF
+      2. decode (instruction decode) ID (RF)
+      3. execute                     EXE
+      4. memory                      MEM
+      5. write back                   WB
+
+      First step: fetch from memory. if its an instruction it goes poof
+        and we are done else we might have to write back
+      Second step: convert 1s and 0s into instructions
+        sometimes called register fetch
+      Third step: execute the instruction ALU
+      Forth step: read or store in memory. i.e. load word and store word
+      Fifth step: write a value into destination register
+
+    RTL: Register transfer Language
+    PC: Program Counter
+      address of next instruction
+    IR: instruction Register
+      holds instruction currently being executed
+    A/B Holds results from register
+    MDR memory data register
+    IMM immediate value
+    MAR memory address register
+    ALUOut result form ALU
+    R: Register File
+    COND: condition codes
+      one of the condition codes is zero
+
+    IF: IR <- Mem[PC]
+    PC <- PC + 4
+      Instruction register get teh value from
+      memory address by the program Counter
+      and increment pc counter
+
+    ID(RF): A <- R[IR[25:21]]
+            B <- R[IR[20:16]]
+            IMM <- sign-extension[IR[15:0]]
+          takes 5 bits from instruction in register file and store in A
+          takes 5 bits from instruction in register file and store in B
+          doesn't matter if it means something or not we get it anyways
+
+    EXE:
+          R: ALUOut <- A op B      (Register)
+          I: ALUOut <- A op IMM    (immediate)
+          L/S: MAR <- A + IMM      (Load/Store)
+          B: ALUOut <- PC + (IMM << 2)
+             COND <- (A == 0)
+             if(COND) PC <- ALUOut
+          op is the operation from the register
+          << is left shift
+          >> is right shift
+          we shift in order to store an 18 bit value in a 16 bit number
+            and to convert from bit values to word values
+
+    MEM:  L/S
+          LW: MDR <- MEM[MAR]
+          SW: MEM[MAR] <- B
+
+    WB:   LW/ALU
+          LW: R[IR[20:16]] <- MDR
+          R: R[IR[15:11]] <- ALUOut
