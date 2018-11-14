@@ -1,0 +1,126 @@
+Email: Varad.kumar3@gmail.com
+
+Talk about GCD assignment
+
+Mips Pipeline
+  Talking about diagrams on class schedule for today
+  http://www.cabrillo.edu/~shodges/cs24/files/mips-pipline.pdf
+    IR hold instruction being exectuted
+      only uses as many bits as needed. 32 bits or less
+    IF/ID  64 bits
+    ID/EX  128 bits
+    EX/MEM 97 bits
+    MEM/WB 64 bits
+  http://www.cabrillo.edu/~shodges/cs24/files/forwarding.png
+    Wont ask us questions about forwarding unit but talks about it anyways.
+    If instruction uses the same registers two times the register passes through
+      the forwarding unit rather then going all the way back to the register file
+  http://www.cabrillo.edu/~shodges/cs24/files/branchdelayslot.png
+
+  Modern processors has very deeper Pipeline
+  Branch hazards are much more likely
+  Execute something without knowing exactly what is happening sometimes
+   hence speculative execution
+  Can use nop instruction to cancel execution
+
+
+Branch Prediction
+  Perfect strategy would be to look into the future to see where you should go
+    but not possible
+  Branch history table
+    Holds the history of the the branch execution
+    Tells if it was just executed or not
+
+    Aside(Finite state machines)
+    Modern branches use finite state machine to determine whether or not
+     next time you should take it
+    Standard two bit branch history table has about 90% accuracy
+    Since processors run both leafs of branches if it fails it just calls
+     nop on the failed leaf and then runs the other leaf
+
+    memory slow, processor/registers fast
+      Register are limited cant continue adding more without creating new architecture
+      Register are expensive to add 1 more register have to redesign everything
+      Memory is "unlimited"
+      Memory can be added without rebuilding the architecture, to an extent
+      We dont always use all of the instruction register or memory at same times
+      Cache compromise between registers and memory
+      Cache is cheaper then registers but faster then memory
+
+      Temporal locality: use a value, tend to use again in near future
+      Spatial locality: use a value tend to use nearby values in near future
+
+      memory sometimes drawn as a pyramid
+      bottom is lots of regular memory and as you get higher up you can a couple
+       layers of cache that is faster but less per level
+      using this idea of loading some data in cache rather then directly in
+       memory can make executing stuff faster
+      different cache's work different and are valued differently
+
+      Block - minimum unit of data
+        Hit - data we want is at higher level of memory
+        Miss - data we want is at lower level
+
+      as you move farther down in the memory pyramid you dont grab single words
+      you eventually get down into pages in ram
+
+      for us word size: 1, 2, 4 bits
+      they go higher but we wont go that high
+
+      Hit Rate
+        % of all access that are hits
+      Miss Rate
+        1 minus hit rate
+      Miss penalty
+        time to deliver a value from lower level to upper level
+      hit time
+        time between levels (less important)
+
+      100% hit rate is memory as fast as upper level and as large of lower level
+        not possible
+      questions
+        is "this" value in the cache?
+        ....if so, where?
+
+        theres a list of loactions it could be
+        on one side it could be only in one place
+        on the other side it could be anywhere
+
+
+      Each "bit" of cache contains three sections
+        Valid Bit
+        Tag Bit
+        Actaul Data
+
+      Valid bit tells if what is stored is actaully what you want
+
+      cache size can only be measured as 2^n
+      because to map the cache to memory you use individual bits of the address
+      cache size of 8 the first bit is 000 which corresponds to 0 and 8
+      bit 001 is 1(cache) and 9(memory)
+      111 is 8(cache) and 16(memory)
+      and then it loops over
+      000 is 0(cache) 17(memory)
+      etc.
+
+      what is stored in cache is the guess
+      first the processor looks in cache if thats not what we need we then
+       grab from memory as we grab from memory we move the data into the
+       cache as well
+      there is all sorts of cache all the way from cpu registers to hybrid ssd/hdd
+      RAM is kind of like cache for the hdd/ssd
+
+      Tag Bits - disambiguate what value is in the Cache
+      consider "address": any value in memory
+      with cache size of 8
+      lowest three bits of address would be the cache index
+      remaining bits are tag bits
+      We will run simulation next week
+      required length of tag bits is how many bits you need to count to cache size
+      cache size of 2^n requires n bits
+
+      for us what we write in data is not the actaully data but instead the address
+      thats not what the cpu see but thats what we will work with for simplicity
+
+      next time we will talk about different mapping strategy.
+      This time we talked about direct mapping
